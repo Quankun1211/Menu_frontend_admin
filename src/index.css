@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@keyframes cart-shake {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(-12deg); }
+  30% { transform: rotate(12deg); }
+  45% { transform: rotate(-8deg); }
+  60% { transform: rotate(8deg); }
+  75% { transform: rotate(-4deg); }
+  100% { transform: rotate(0); }
+}
+
+.cart-shake {
+  animation: cart-shake 0.45s ease-in-out;
+  transform-origin: center;
+}
+
+.price-slider .ant-slider-track {
+  background-color: #22c55e;
+}
+
+.price-slider .ant-slider-handle {
+  border-color: #22c55e;
+}
+
+.ant-slider:hover .ant-slider-track {
+  background-color: #16a34a;
+}
+
+.ant-slider .ant-slider-handle::after {
+  background-color: #4ce885;
+}
+
+.ant-slider:hover .ant-slider-handle::after {
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #22c55e;
+}
+
+.comment-popover .ant-popover-inner {
+  max-width: 260px;
+  padding: 8px 12px;
+}
+
+.comment-popover .ant-popover-inner-content {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Nhắm mục tiêu chính xác vào thẻ input bên trong wrapper có suffix */
+.ant-input-affix-wrapper > input.ant-input::placeholder {
+  color: #6e747c !important; /* Màu Gray-600 đậm hơn */
+  opacity: 1 !important;
+}
+
+/* Đối với các bản Ant Design mới hơn */
+.ant-input-affix-wrapper .ant-input::placeholder {
+  color: #6e747c !important;
+}
+
+/* Change the border color and dot color when the radio is checked */
+.my-custom-radio-group .ant-radio-checked .ant-radio-inner {
+  border-color: #4dff82 !important; /* Your desired color */
+}
+
+.my-custom-radio-group .ant-radio-checked .ant-radio-inner::after {
+  background-color: #4dff82 !important; /* Your desired color for the inner dot */
+}
+
+/* Optional: Change the color on hover */
+.my-custom-radio-group .ant-radio:hover .ant-radio-inner {
+  border-color: #4dff82;
+}
+
+body.hide-footer footer {
+  display: none !important;
+}
