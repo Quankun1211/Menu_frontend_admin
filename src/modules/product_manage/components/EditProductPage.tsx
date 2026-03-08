@@ -17,6 +17,8 @@ export default function EditProductPage() {
   const [isSpecialty, setIsSpecialty] = useState(false);
 
   const { data: product, isLoading: isFetching } = useGetProductDetail(id!);
+  console.log(product);
+  
   const { data: categories } = useGetAllCategory({ page: 1, limit: 100, type: 'product' });
   const { data: sales } = useGetAllAvailableSale();
   const { updateProduct, isUpdating } = useUpdateProduct();

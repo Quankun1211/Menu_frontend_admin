@@ -5,7 +5,7 @@ import { FilterOutlined, DeleteOutlined, DownloadOutlined, PlusOutlined } from '
 import { Search } from 'lucide-react';
 import PageContainer from '../../../components/ui/PageContainer';
 import useGetAllProducts from '../hooks/useGetAllProducts';
-import useDeleteProduct from '../hooks/useDeleteProduct'; // Import hook của bạn
+import useDeleteProduct from '../hooks/useDeleteProduct';
 
 const ProductManage = () => {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ const ProductManage = () => {
   }, [search]);
 
   const { data: allProducts, isPending } = useGetAllProducts({ page, limit, status, search: debouncedSearch });
+  
   const { deleteProduct, isDeleting } = useDeleteProduct();
 
   const handleTableChange = (pagination: any) => {

@@ -164,7 +164,7 @@ const AddRecipe = () => {
                           )}
                         </Form.Item>
                         <Form.Item {...restField} name={[name, 'quantity']} rules={[{ required: true }]}>
-                          <InputNumber placeholder="SL" min={0.1} style={{ width: 80 }} />
+                          <InputNumber placeholder="SL" min={0.0001} style={{ width: 80 }} />
                         </Form.Item>
                         <Form.Item {...restField} name={[name, 'note']}>
                           <Input placeholder="Ghi chú" />
