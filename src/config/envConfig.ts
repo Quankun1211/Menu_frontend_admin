@@ -5,6 +5,7 @@ interface Configuration {
     storageLocaleKey: string;
     storageThemeKey: string;
     keycloakUrl: string;
+    VITE_SOCKET_URL: string
 }
 
 const env: Configuration = {
@@ -13,7 +14,8 @@ const env: Configuration = {
     apiBaseUrl: import.meta.env.VITE_BASE_URL || "",
     storageLocaleKey: import.meta.env.VITE_LOCALE_KEY || "",
     storageThemeKey: import.meta.env.VITE_THEME_KEY || "",
-    keycloakUrl: import.meta.env.VITE_KEYCLOAK_URL || ""
+    keycloakUrl: import.meta.env.VITE_KEYCLOAK_URL || "",
+    VITE_SOCKET_URL: import.meta.env.VITE_SOCKET_URL || "",
 }
 
 export default env
