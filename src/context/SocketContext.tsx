@@ -5,7 +5,7 @@ import env from "../config/envConfig";
 const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const socketUrl = env.VITE_SOCKET_URL || 'http://localhost:5000';
+  const socketUrl = env.VITE_SOCKET_URL || 'https://menu-backend-ve33.onrender.com';
   
   const socket = useMemo(() => {
     return io(socketUrl, {

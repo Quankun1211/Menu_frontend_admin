@@ -146,11 +146,18 @@ const AddRecipe = () => {
                     {fields.map(({ key, name, ...restField }) => (
                       <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                         <Form.Item {...restField} name={[name, 'itemType']} rules={[{ required: true }]}>
-                          <Select style={{ width: 120 }} onChange={() => form.setFieldValue(['ingredients', name, 'ingredientId'], undefined)}>
+                          <Select 
+                            style={{ width: 120 }} 
+                            onChange={() => {
+                              form.setFieldValue(['ingredients', name, 'ingredientId'], undefined);
+                              form.setFieldValue(['ingredients', name, 'quantity'], 1);
+                            }}
+                          >
                             <Select.Option value="Ingredient">Nguyên liệu</Select.Option>
                             <Select.Option value="Product">Sản phẩm</Select.Option>
                           </Select>
                         </Form.Item>
+
                         <Form.Item noStyle shouldUpdate={(prev, curr) => prev.ingredients?.[name]?.itemType !== curr.ingredients?.[name]?.itemType}>
                           {() => (
                             <Form.Item {...restField} name={[name, 'ingredientId']} rules={[{ required: true, message: 'Chọn mục' }]}>
@@ -163,16 +170,37 @@ const AddRecipe = () => {
                             </Form.Item>
                           )}
                         </Form.Item>
-                        <Form.Item {...restField} name={[name, 'quantity']} rules={[{ required: true }]}>
-                          <InputNumber placeholder="SL" min={0.0001} style={{ width: 80 }} />
+
+                        <Form.Item noStyle shouldUpdate={(prev, curr) => prev.ingredients?.[name]?.itemType !== curr.ingredients?.[name]?.itemType}>
+                          {() => {
+                            const isProduct = form.getFieldValue(['ingredients', name, 'itemType']) === 'Product';
+                            
+                            const numberProps: any = {
+                              placeholder: "SL",
+                              style: { width: 80 },
+                              min: isProduct ? 1 : 0.0001,
+                              step: isProduct ? 1 : 0.1,
+                            };
+
+                            if (isProduct) {
+                              numberProps.precision = 0;
+                            }
+
+                            return (
+                              <Form.Item {...restField} name={[name, 'quantity']} rules={[{ required: true }]}>
+                                <InputNumber {...numberProps} />
+                              </Form.Item>
+                            );
+                          }}
                         </Form.Item>
+
                         <Form.Item {...restField} name={[name, 'note']}>
                           <Input placeholder="Ghi chú" />
                         </Form.Item>
                         <MinusCircleOutlined onClick={() => remove(name)} />
                       </Space>
                     ))}
-                    <Button type="dashed" onClick={() => add({ itemType: 'Ingredient' })} block icon={<PlusOutlined />}>
+                    <Button type="dashed" onClick={() => add({ itemType: 'Ingredient', quantity: 1 })} block icon={<PlusOutlined />}>
                       Thêm nguyên liệu/sản phẩm hệ thống
                     </Button>
                   </>
