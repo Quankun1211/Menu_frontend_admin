@@ -4,7 +4,12 @@ import type { PaginationResponse } from "../../../types/api-response";
 import type { IngredientResponse, RecipeResponse } from "../types/api-response";
 
 export const getAllRecipesApi = async (params: any): Promise<PaginationResponse<RecipeResponse>> => {
-    const response = await api.get("/admin/get-all-recipes", { params });
+    const cleanParams = Object.fromEntries(
+      Object.entries(params || {}).filter(([, value]) =>
+        value !== "" && value !== undefined && value !== null
+      )
+    );
+    const response = await api.get("/admin/get-all-recipes", { params: cleanParams });
     return response.data;
 };
 

@@ -1,17 +1,19 @@
 import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import env from "../config/envConfig";
+import { useAppStore } from "../store/app.store";
 
 const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const socketUrl = env.VITE_SOCKET_URL || 'https://menu-backend-ve33.onrender.com';
+  const socketUrl = env.VITE_SOCKET_URL || window.location.origin;
+  const userData = useAppStore((state) => state.userData);
   
   const socket = useMemo(() => {
     return io(socketUrl, {
       transports: ['websocket'],
       withCredentials: true,
-      autoConnect: true,
+      autoConnect: false,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 5000,
@@ -19,6 +21,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [socketUrl]);
 
   useEffect(() => {
+    if (userData) socket.connect();
+    else socket.disconnect();
+
     socket.on('connect', () => {
       console.log('✅ Socket connected:', socket.id);
     });
@@ -32,7 +37,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       socket.off('connect_error');
       socket.disconnect();
     };
-  }, [socket]);
+  }, [socket, userData]);
 
   return (
     <SocketContext.Provider value={socket}>

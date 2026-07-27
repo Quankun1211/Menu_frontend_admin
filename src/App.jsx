@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import Fallback from './components/common/Fallback'
 import {RouterProvider} from 'react-router-dom'
 import router from './routes'
 function App() {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Table, Button, Input, Tag, Space, Modal, Select, Avatar } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined, FilterOutlined, InboxOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined, InboxOutlined } from '@ant-design/icons';
 import PageContainer from '../../../components/ui/PageContainer';
 import useGetAllRecipes from '../hooks/useGetAllRecipe';
 import useDeleteRecipe from '../hooks/useDeleteRecipe';
@@ -16,13 +16,13 @@ const RecipeManage = () => {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({ difficulty: '', weatherTag: '' });
 
-  const { data: recipes, isPending } = useGetAllRecipes({ 
-    page, 
-    limit, 
-    search, 
-    ...filters 
+  const { data: recipes, isPending } = useGetAllRecipes({
+    page,
+    limit,
+    search,
+    ...filters
   });
-  
+
   const { deleteRecipe, isDeleting } = useDeleteRecipe();
 
   const handleDelete = (record: RecipeResponse) => {
@@ -47,18 +47,14 @@ const RecipeManage = () => {
       title: 'TÊN CÔNG THỨC',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string, record: RecipeResponse) => (
-        <div>
-          <div className="font-bold text-gray-800">{text}</div>
-        </div>
-      ),
+      render: (text: string) => <div className="font-bold text-gray-800">{text}</div>,
     },
     {
       title: 'ĐỘ KHÓ',
       dataIndex: 'difficulty',
       key: 'difficulty',
       render: (diff: string) => {
-        let color = diff === 'Dễ' ? 'green' : diff === 'Trung bình' ? 'blue' : 'volcano';
+        const color = diff === 'Dễ' ? 'green' : diff === 'Trung bình' ? 'blue' : 'volcano';
         return <Tag color={color}>{diff.toUpperCase()}</Tag>;
       },
     },
@@ -73,7 +69,7 @@ const RecipeManage = () => {
       dataIndex: 'weatherTag',
       key: 'weatherTag',
       render: (tag: string) => {
-        const icons: any = { hot: '☀️', cold: '❄️', rainy: '🌧️', neutral: '☁️' };
+        const icons: Record<string, string> = { hot: '☀️', cold: '❄️', rainy: '🌧️', neutral: '☁️' };
         return <span>{icons[tag] || '☁️'} {tag}</span>;
       },
     },
@@ -81,21 +77,12 @@ const RecipeManage = () => {
       title: 'HÀNH ĐỘNG',
       key: 'action',
       width: 150,
-      render: (_: any, record: RecipeResponse) => (
+      render: (_: unknown, record: RecipeResponse) => (
         <Space size="middle">
-          <Button 
-            type="text" 
-            icon={<EditOutlined />} 
-            onClick={() => navigate(`/recipes/edit/${record._id}`)}
-          >
+          <Button type="text" icon={<EditOutlined />} onClick={() => navigate(`/recipes/edit/${record._id}`)}>
             Sửa
           </Button>
-          <Button 
-            type="text" 
-            danger 
-            icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(record)}
-          />
+          <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
         </Space>
       ),
     },
@@ -106,12 +93,7 @@ const RecipeManage = () => {
       title="Quản lý công thức nấu ăn"
       description="Xem, tìm kiếm và điều chỉnh các công thức trong hệ thống."
       actions={
-        <Button 
-          type="primary" 
-          icon={<PlusOutlined />} 
-          size="large" 
-          onClick={() => navigate('/recipes/add')}
-        >
+        <Button type="primary" icon={<PlusOutlined />} size="large" onClick={() => navigate('/recipes/add')}>
           Thêm công thức
         </Button>
       }
@@ -125,9 +107,9 @@ const RecipeManage = () => {
             onChange={(e) => setSearch(e.target.value)}
             allowClear
           />
-          <Select 
-            placeholder="Độ khó" 
-            style={{ width: 130 }} 
+          <Select
+            placeholder="Độ khó"
+            style={{ width: 130 }}
             allowClear
             onChange={(val) => setFilters(prev => ({ ...prev, difficulty: val }))}
           >
@@ -135,9 +117,9 @@ const RecipeManage = () => {
             <Option value="Trung bình">Trung bình</Option>
             <Option value="Khó">Khó</Option>
           </Select>
-          <Select 
-            placeholder="Thời tiết" 
-            style={{ width: 130 }} 
+          <Select
+            placeholder="Thời tiết"
+            style={{ width: 130 }}
             allowClear
             onChange={(val) => setFilters(prev => ({ ...prev, weatherTag: val }))}
           >

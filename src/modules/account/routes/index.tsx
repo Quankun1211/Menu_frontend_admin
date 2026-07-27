@@ -11,10 +11,6 @@ export const authRouter: RouteObject[] = [
                 lazy: lazyLoad(() => import("../pages/SignIn"))
             },
             {
-                path: "register",
-                lazy: lazyLoad(() => import("../pages/SignUp"))
-            },
-            {
                 path: "forgot-password",
                 children: [
                     {

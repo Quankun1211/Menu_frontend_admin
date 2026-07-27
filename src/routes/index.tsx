@@ -1,4 +1,4 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Navigate} from "react-router-dom";
 import { Suspense } from "react";
 import AuthLayout from "../layouts/AuthLayout";
 import Fallback from "../components/common/Fallback";
@@ -13,6 +13,7 @@ import { saleManageRouter } from "../modules/sale_manage/routes";
 import { recipeManageRouter } from "../modules/rercipe_manage/routes";
 import { ingredientManageRouter } from "../modules/rercipe_manage/routes";
 import { menuManageRouter } from "../modules/menu_manage/routes";
+import { configManageRouter } from "../modules/config_manage/routes";
 const AuthLayoutWithSuspense = () => (
   <Suspense fallback={<Fallback />}>
     <AuthLayout />
@@ -46,8 +47,13 @@ const router = createBrowserRouter([
                     ...saleManageRouter,
                     ...recipeManageRouter,
                     ...ingredientManageRouter,
-                    ...menuManageRouter
+                    ...menuManageRouter,
+                    ...configManageRouter
                 ]
+            },
+            {
+                path: "*",
+                element: <Navigate to="/" replace />
             }
         ]
     }

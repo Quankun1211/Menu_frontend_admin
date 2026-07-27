@@ -4,8 +4,8 @@ import { Button, Input, Select, Upload, Row, Col, Form, InputNumber, message, Sp
 import { InboxOutlined, LeftOutlined, SaveOutlined } from '@ant-design/icons';
 import PageContainer from '../../../components/ui/PageContainer';
 import useGetAllAvailableSale from '../hooks/useGetAllAvailableSale';
-import useGetProductDetail from '../hooks/useGetProductDetail';
-import useUpdateProduct from '../hooks/useUpdateProduct';
+import useGetSpecialDetail from '../hooks/useGetSpecialDetail';
+import useUpdateSpecial from '../hooks/useUpdateSpecial';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
@@ -15,8 +15,8 @@ export default function EditSpecialtyPage() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const { data: productData, isLoading: isFetching } = useGetProductDetail(id!);
-  const { updateProduct, isUpdating } = useUpdateProduct();
+  const { data: productData, isLoading: isFetching } = useGetSpecialDetail(id!);
+  const { updateSpecial, isUpdating } = useUpdateSpecial();
   const { data: sales } = useGetAllAvailableSale();
 
   useEffect(() => {
@@ -29,11 +29,11 @@ export default function EditSpecialtyPage() {
         protein: p.nutrition?.protein,
         fat: p.nutrition?.fat,
         carbs: p.nutrition?.carbs,
-        image: p.image ? [{
+        image: p.images ? [{
           uid: '-1',
           name: 'image.png',
           status: 'done',
-          url: p.image,
+          url: p.images,
         }] : [],
       });
     }
@@ -66,11 +66,15 @@ export default function EditSpecialtyPage() {
     formData.append('season', JSON.stringify(values.season || []));
     formData.append('usage_instruction', JSON.stringify(values.usage_instruction || []));
 
-    if (values.image?.fileList?.[0]?.originFileObj) {
-      formData.append('image', values.image.fileList[0].originFileObj);
+    const selectedImage = Array.isArray(values.image)
+      ? values.image[0]?.originFileObj
+      : values.image?.fileList?.[0]?.originFileObj;
+
+    if (selectedImage) {
+      formData.append('image', selectedImage);
     }
 
-    updateProduct({ 
+    updateSpecial({
         id: id!, 
         data: formData 
     }, {

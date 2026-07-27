@@ -63,6 +63,23 @@ export const getProductDetailApi = async (id: string) => {
     return response.data;
 };
 
+export const getSpecialDetailApi = async (id: string) => {
+  const response = await api.get(`/admin/get-special-detail/${id}`);
+  return response.data;
+};
+
+export const updateSpecialAdminApi = async (id: string, formData: FormData) => {
+  const response = await api.put(`/admin/special-update/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+};
+
+export const deleteSpecialApi = async (id: string) => {
+  const response = await api.delete(`/admin/special-delete/${id}`);
+  return response.data;
+};
+
 export const deleteProductApi = async (id: string) => {
     const response = await api.delete(`/admin/product-delete/${id}`);
     return response.data;

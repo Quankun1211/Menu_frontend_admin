@@ -38,15 +38,14 @@ export default function SideBar() {
             children: [
                 { name: "Sản phẩm", path: "/manage/list/products" },
                 { name: "Đặc sản", path: "/manage/list/specials" },
-                { name: "Thêm mới", path: "/manage/add-product" }
+                { name: "Thêm mới", path: "/manage/products/add" }
             ]
         },
         { name: "Quản lý nguyên liệu", path: "/ingredients" },
         { name: "Quản lý công thức", path: "/recipes" },
         { name: "Quản lý thực đơn", path: "/menus" },
         { name: "Quản lý Sale", path: "/sales" },
-        { name: "Khách hàng", path: "/notifications" },
-        { name: "Thống kê", path: "/settings" },
+        { name: "Cấu hình vận chuyển", path: "/settings/shipping" },
     ];
 
     return (

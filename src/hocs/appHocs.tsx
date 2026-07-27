@@ -1,34 +1,20 @@
 import { type JSX, useEffect } from "react";
 import type { ComponentType } from "react";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import { useAppStore } from "../store/app.store";
-import { getToken } from "../utils/token";
 import useGetMe from "../hooks/useGetMe";
 
 function AppHoc<T extends JSX.IntrinsicAttributes>(
     WrappedComponent: ComponentType<T>
 ) {
     const AuthenticatedComponent = (props: T) => {
-        const navigate = useNavigate();
-        const token = getToken();
         const { setUserData } = useAppStore();
-        const { data: meData, isError } = useGetMe(!!token);
-
-        useEffect(() => {
-            if (!token) {
-                navigate("/account/login");
-            }
-        }, [token, navigate]);
-
-        useEffect(() => {
-            if (isError) {
-                navigate("/account/login");
-            }
-        }, [isError, navigate]);
+        const { data: meData, isError, isPending } = useGetMe(true);
 
         useEffect(() => {
             if (meData?.data) {
                 const user = meData.data;
+                if (!["admin", "super_admin"].includes(user.role)) return;
                 const jwtPayload = {
                     username: user.username,
                     role: user.role,
@@ -42,6 +28,14 @@ function AppHoc<T extends JSX.IntrinsicAttributes>(
             }
         }, [meData, setUserData]);
 
+        if (isPending) return <div className="flex h-screen items-center justify-center text-gray-500">Đang xác thực...</div>;
+        if (
+            isError ||
+            !meData?.data ||
+            !["admin", "super_admin"].includes(meData.data.role)
+        ) {
+            return <Navigate to="/account/login" replace />;
+        }
         return <WrappedComponent {...props} />;
     };
     return AuthenticatedComponent;

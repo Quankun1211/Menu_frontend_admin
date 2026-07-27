@@ -4,7 +4,7 @@ import { Table, Input, Button, Tabs, Tag, Space, Modal, message } from 'antd';
 import { SearchOutlined, PlusOutlined, FilterOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
 import PageContainer from '../../../components/ui/PageContainer';
 import useGetAllSpecials from '../hooks/useGetAllSpecials';
-import useDeleteProduct from '../hooks/useDeleteProduct';
+import useDeleteSpecial from '../hooks/useDeleteSpecial';
 
 const SpecialManage = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const SpecialManage = () => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
   const { data: allProducts, isPending } = useGetAllSpecials({ page, limit, status })
-  const { deleteProduct, isDeleting } = useDeleteProduct();
+  const { deleteSpecial, isDeleting } = useDeleteSpecial();
   
   const handleTableChange = (pagination: any) => {
     setPage(pagination.current);
@@ -29,7 +29,7 @@ const SpecialManage = () => {
 
   const handleDeleteConfirm = () => {
     if (selectedProduct?._id ) {
-      deleteProduct(selectedProduct._id , {
+      deleteSpecial(selectedProduct._id , {
         onSuccess: () => {
           setIsDeleteOpen(false);
           setSelectedProduct(null);

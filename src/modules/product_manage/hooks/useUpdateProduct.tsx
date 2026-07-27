@@ -20,8 +20,12 @@ const useUpdateProduct = () => {
       navigate("/manage/list/products");
     },
     
-    onError: (error: any) => {
-      const errorMsg = error.response?.data?.message || "Có lỗi xảy ra khi cập nhật";
+    onError: (error: unknown) => {
+      const responseError = error as { error?: string; message?: string };
+      const errorMsg =
+        responseError?.message ||
+        responseError?.error ||
+        "Có lỗi xảy ra khi cập nhật";
       message.error(errorMsg);
     },
   });

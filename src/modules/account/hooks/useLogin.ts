@@ -2,12 +2,13 @@ import { useNavigate } from "react-router";
 import { useAppStore } from "../../../store/app.store";
 import { useMutation } from "@tanstack/react-query";
 import { onLogInApi } from "../services/api";
-import { removeToken, setToken } from "../../../utils/token";
 import { message } from "antd";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useLogin = () => {
     const navigate = useNavigate();
     const { setUserData } = useAppStore();
+    const queryClient = useQueryClient();
 
     const { mutate, data, error, isPending, isError } = useMutation({
         mutationKey: ["login"],
@@ -15,7 +16,6 @@ const useLogin = () => {
         onSuccess: (data) => {
             if (data?.data) {
                 if (data.data.role === 'admin' || data.data.role === "super_admin") {
-                    setToken(data.data.access_token);
                     setUserData({
                         username: data.data.username,
                         sub: data.data._id,
@@ -25,19 +25,24 @@ const useLogin = () => {
                         name: data.data.name,
                         email: data.data.email
                     });
-                    navigate('/');
+                    queryClient.invalidateQueries({ queryKey: ["me"] });
+                    navigate('/', { replace: true });
                 } else {
-                    removeToken();
                     setUserData(null);
                     message.error("Tài khoản không có quyền truy cập trang quản trị!");
-                    navigate('/account/login');
+                    navigate('/account/login', { replace: true });
                 }
             } else {
-                message.error("Tài khoản không tồn tại")
+                message.error("Phản hồi đăng nhập không hợp lệ")
             }
         },
-        onError: () => {
-            message.error("Tài khoản không tồn tại")
+        onError: (error: unknown) => {
+            const responseError = error as { error?: string; message?: string };
+            message.error(
+                responseError?.error ||
+                responseError?.message ||
+                "Không thể đăng nhập. Vui lòng thử lại."
+            );
         }
     });
 

@@ -22,7 +22,7 @@ export default function MenuListPage() {
 
     const { data: allCategory, isPending } = useGetAllCategory({ 
         page: 1, 
-        limit: 1000, 
+        limit: 100, 
         type: "menu", 
     });
 
@@ -136,6 +136,9 @@ export default function MenuListPage() {
                         current: pagination.page,
                         pageSize: pagination.limit,
                         total: response?.meta?.total || 0,
+                        showSizeChanger: true,
+                        pageSizeOptions: [10, 20, 50, 100],
+                        showTotal: (total) => `Tổng ${total} thực đơn`,
                     }}
                 />
             </div>

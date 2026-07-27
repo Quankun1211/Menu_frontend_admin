@@ -3,7 +3,13 @@ import type { logInRequest } from "../types/api-request";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
 
-function LoginForm({onFinish} : {onFinish: (values: logInRequest) => void}) {
+function LoginForm({
+    onFinish,
+    isLoading = false
+} : {
+    onFinish: (values: logInRequest) => void;
+    isLoading?: boolean;
+}) {
     return (
         <Form
             onFinish={onFinish}
@@ -64,7 +70,12 @@ function LoginForm({onFinish} : {onFinish: (values: logInRequest) => void}) {
                 />
             </Form.Item>
 
-            <Button className="w-full mt-4 h-12! bg-blue-500! text-white!" htmlType="submit">
+            <Button
+                className="w-full mt-4 h-12! bg-blue-500! text-white!"
+                htmlType="submit"
+                loading={isLoading}
+                disabled={isLoading}
+            >
                 Đăng nhập
             </Button>
         </Form>

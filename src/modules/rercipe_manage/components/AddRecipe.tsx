@@ -21,11 +21,11 @@ const AddRecipe = () => {
   const navigate = useNavigate();
 
   const { createRecipe, isCreating } = useCreateRecipe();
-  const { data: allProducts } = useGetAllProducts({ page: 1, limit: 1000, status: "in_stock" });
-  const { data: ingredients } = useGetAllIngredients({ limit: 1000 });
+  const { data: allProducts } = useGetAllProducts({ page: 1, limit: 100, status: "in_stock" });
+  const { data: ingredients } = useGetAllIngredients({ limit: 100 });
   const { data: allCategory } = useGetAllCategory({ 
     page: 1, 
-    limit: 1000, 
+    limit: 100, 
     type: "recipe", 
   });
 

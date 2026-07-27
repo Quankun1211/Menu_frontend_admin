@@ -10,9 +10,12 @@ const useUpdateMenu = () => {
       updateMenuApi(id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["get-all-menu-admin"] });
+      queryClient.invalidateQueries({ queryKey: ["get-menu-detail-admin"] });
+      message.success("Cập nhật thực đơn thành công!");
     },
-    onError: (error: any) => {
-      message.error(error.response?.data?.message || "Cập nhật thất bại!");
+    onError: (error: unknown) => {
+      const responseError = error as { error?: string; message?: string };
+      message.error(responseError.message || responseError.error || "Cập nhật thất bại!");
     }
   });
 

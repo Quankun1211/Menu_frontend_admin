@@ -13,8 +13,13 @@ const useUpdateCategoryData = () => {
             queryClient.invalidateQueries({ queryKey: ["get-all-category-admin"] });
             message.success("Cập nhật thông tin thành công");
         },
-        onError: (err: any) => {
-            message.error(err.response?.data?.message || "Có lỗi xảy ra");
+        onError: (err: unknown) => {
+            const responseError = err as { error?: string; message?: string };
+            message.error(
+                responseError?.message ||
+                responseError?.error ||
+                "Không thể cập nhật danh mục"
+            );
         }
     });
 

@@ -24,9 +24,9 @@ const EditRecipe = () => {
 
   const { data: recipeData, isPending: isFetching } = useGetRecipeDetail(id!);
   const { updateRecipe, isUpdating } = useUpdateRecipe();
-  const { data: allProducts } = useGetAllProducts({ page: 1, limit: 1000, status: "in_stock" });
-  const { data: ingredients } = useGetAllIngredients({ limit: 1000 });
-  const { data: allCategory } = useGetAllCategory({ page: 1, limit: 1000, type: "recipe" });
+  const { data: allProducts } = useGetAllProducts({ page: 1, limit: 100, status: "in_stock" });
+  const { data: ingredients } = useGetAllIngredients({ limit: 100 });
+  const { data: allCategory } = useGetAllCategory({ page: 1, limit: 100, type: "recipe" });
 
   useEffect(() => {
     if (recipeData?.data) {

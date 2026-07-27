@@ -19,12 +19,12 @@ export default function AddMenuPage() {
     const { mutate: createMenu, isPending } = useCreateMenu();
     const { data: categories } = useGetAllCategory({ 
         page: 1, 
-        limit: 1000, 
+        limit: 100, 
         type: "menu", 
     });
     const { data: recipesData } = useGetAllRecipes({ 
         page: 1, 
-        limit: 1000, 
+        limit: 100, 
     });
 
     const onFinish = (values: any) => {

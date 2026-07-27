@@ -5,7 +5,7 @@ import type { FormProps } from "antd"
 import type { logInRequest } from "../types/api-request"
 
 export default function SignIn() {
-    const { mutate: onLogin } = useLogin()
+    const { mutate: onLogin, isPending } = useLogin()
     const onFinish: FormProps<logInRequest>["onFinish"] = (values) => {
         onLogin({...values})
     }
@@ -17,7 +17,7 @@ export default function SignIn() {
                 <h2 className="text-3xl font-bold mb-2 text-center">Chào mừng quay trở lại</h2>
                 <p className="text-gray-500 mb-8 text-center">Vui lòng nhập thông tin tài khoản của bạn để tiếp tục.</p>
                 
-                <LoginForm onFinish={onFinish}/>
+                <LoginForm onFinish={onFinish} isLoading={isPending}/>
                 
                 <div className="text-center mt-6 text-sm text-gray-500">
                     Bạn chưa có tài khoản? <a href="#" className="text-blue-600 font-medium">Liên hệ quản trị viên</a>
