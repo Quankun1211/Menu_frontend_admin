@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useAppStore } from "../store/app.store"
 import { onLogoutApi } from "../services/api"
 import { useQueryClient } from "@tanstack/react-query"
+import { clearTokens } from "../utils/token"
 
 const useLogout = () => {
     const queryClient = useQueryClient()
@@ -11,6 +12,7 @@ const useLogout = () => {
         mutationKey: ["logout"],
         mutationFn: onLogoutApi,
         onSuccess: () => {
+            clearTokens()
             setUserData(null)
 
             queryClient.clear()

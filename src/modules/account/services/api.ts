@@ -8,7 +8,8 @@ export const onLogInApi = async(
     const {username, password} = payload
     const data = await api.post("auth/login", {
         username,
-        password
+        password,
+        clientType: "spa"
     })
     return data.data
 }

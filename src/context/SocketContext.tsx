@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import env from "../config/envConfig";
 import { useAppStore } from "../store/app.store";
+import { getToken } from "../utils/token";
 
 const SocketContext = createContext<Socket | null>(null);
 
@@ -14,6 +15,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       transports: ['websocket'],
       withCredentials: true,
       autoConnect: false,
+      auth: { token: getToken() },
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 5000,
@@ -21,7 +23,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [socketUrl]);
 
   useEffect(() => {
-    if (userData) socket.connect();
+    if (userData) {
+      socket.auth = { token: getToken() };
+      socket.connect();
+    }
     else socket.disconnect();
 
     socket.on('connect', () => {

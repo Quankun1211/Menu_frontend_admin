@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { onLogInApi } from "../services/api";
 import { message } from "antd";
 import { useQueryClient } from "@tanstack/react-query";
+import { setRefreshToken, setToken } from "../../../utils/token";
 
 const useLogin = () => {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ const useLogin = () => {
         onSuccess: (data) => {
             if (data?.data) {
                 if (data.data.role === 'admin' || data.data.role === "super_admin") {
+                    setToken(data.data.access_token);
+                    setRefreshToken(data.data.refresh_token);
                     setUserData({
                         username: data.data.username,
                         sub: data.data._id,
