@@ -10,6 +10,7 @@ api.defaults.headers.post["Content-Type"] = "application/json";
 
 let csrfToken: string | undefined;
 let csrfRequest: Promise<string | undefined> | undefined;
+let refreshRequest: Promise<any> | undefined;
 
 const readCookie = (name: string) =>
   document.cookie
@@ -79,11 +80,12 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !isAuthRoute && !originalRequest?._retry) {
       originalRequest._retry = true;
       try {
-        const response = await axios.post(
-          `${ApiUrls.apiBaseUrl}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
+        refreshRequest ||= axios
+          .post(`${ApiUrls.apiBaseUrl}/auth/refresh`, {}, { withCredentials: true })
+          .finally(() => {
+            refreshRequest = undefined;
+          });
+        const response = await refreshRequest;
         csrfToken = response.data?.data?.csrfToken || csrfToken;
         return api(originalRequest);
       } catch (refreshError: any) {

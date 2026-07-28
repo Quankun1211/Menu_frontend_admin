@@ -35,10 +35,14 @@ const OrderManage = () => {
   useEffect(() => {
     if (!socket) return;
     const handleRefresh = () => {
-      queryClient.invalidateQueries({ queryKey: ["admin_orders_list"] });
+      queryClient.invalidateQueries({ queryKey: ["get-all-orders-admin"] });
     };
     socket.on("admin_refresh_orders", handleRefresh);
-    return () => { socket.off("admin_refresh_orders", handleRefresh); };
+    socket.on("order_updated", handleRefresh);
+    return () => {
+      socket.off("admin_refresh_orders", handleRefresh);
+      socket.off("order_updated", handleRefresh);
+    };
   }, [socket, queryClient]);
 
   const [isCancelProcessOpen, setIsCancelProcessOpen] = useState(false);
