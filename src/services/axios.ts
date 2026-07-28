@@ -77,8 +77,9 @@ api.interceptors.response.use(
       return api(originalRequest);
     }
 
-    const isAuthRoute = ["/auth/login", "/auth/logout", "/auth/register", "/auth/refresh"]
-      .some((path) => originalRequest?.url?.includes(path));
+    const requestUrl = originalRequest?.url || "";
+    const isAuthRoute = ["auth/login", "auth/logout", "auth/register", "auth/refresh"]
+      .some((path) => requestUrl.includes(path));
 
     if (error.response?.status === 401 && !isAuthRoute && !originalRequest?._retry) {
       originalRequest._retry = true;

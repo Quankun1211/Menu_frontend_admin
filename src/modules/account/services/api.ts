@@ -6,7 +6,7 @@ export const onLogInApi = async(
     payload: logInRequest
 ) : Promise<BackendResponse<LoginResponse>> => {
     const {username, password} = payload
-    const data = await api.post("auth/login", {
+    const data = await api.post("/auth/login", {
         username,
         password,
         clientType: "spa"
