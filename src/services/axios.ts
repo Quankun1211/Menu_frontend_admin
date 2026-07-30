@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ApiUrls } from "../config/url";
 import { clearTokens, getRefreshToken, getToken, setRefreshToken, setToken } from "../utils/token";
+import { useAppStore } from "../store/app.store";
 
 const api = axios.create({
   baseURL: ApiUrls.apiBaseUrl,
@@ -102,6 +103,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError: any) {
         clearTokens();
+        useAppStore.getState().setUserData(null);
         if (window.location.pathname !== "/account/login") {
           window.location.href = "/account/login";
         }

@@ -11,7 +11,7 @@ const useLogout = () => {
     const {data, error, isPending, isError, mutate} = useMutation({
         mutationKey: ["logout"],
         mutationFn: onLogoutApi,
-        onSuccess: () => {
+        onSettled: () => {
             clearTokens()
             setUserData(null)
 
