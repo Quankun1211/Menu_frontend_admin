@@ -9,50 +9,50 @@ export const getAllRecipesApi = async (params: any): Promise<PaginationResponse<
         value !== "" && value !== undefined && value !== null
       )
     );
-    const response = await api.get("/admin/get-all-recipes", { params: cleanParams });
+    const response = await api.get("/admin/recipes", { params: cleanParams });
     return response.data;
 };
 
 export const getAllIngredientsApi = async (params: any): Promise<PaginationResponse<IngredientResponse>> => {
-    const response = await api.get("/admin/get-all-ingredients", { params });
+    const response = await api.get("/admin/ingredients", { params });
     return response.data;
 };
 
 export const createIngredientApi = async (data: any): Promise<BackendResponse<IngredientResponse>> => {
-    const response = await api.post("/admin/create-ingredient", data);
+    const response = await api.post("/admin/ingredients", data);
     return response.data;
 };
 
 export const updateIngredientApi = async ({ id, data }: { id: string; data: IngredientResponse }): Promise<BackendResponse<any>> => {
-    const response = await api.put(`/admin/ingredient-update/${id}`, data);
+    const response = await api.put(`/admin/ingredients/${id}`, data);
     return response.data;
 };
 
 export const deleteIngredientApi = async (id: string): Promise<BackendResponse<IngredientResponse>> => {
-    const response = await api.delete(`/admin/ingredient-delete/${id}`);
+    const response = await api.delete(`/admin/ingredients/${id}`);
     return response.data;
 };
 
 export const createRecipeApi = async (formData: FormData): Promise<BackendResponse<RecipeResponse>> => {
-    const response = await api.post("/admin/create-recipe", formData, {
+    const response = await api.post("/admin/recipes", formData, {
         headers: { "Content-Type": "multipart/form-data" }
     });
     return response.data;
 };
 
 export const updateRecipeApi = async (id: string, formData: FormData) => {
-  const { data } = await api.put(`/admin/recipe-update/${id}`, formData, {
+  const { data } = await api.put(`/admin/recipes/${id}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
   return data;
 };
 
 export const deleteRecipeApi = async (id: string) => {
-  const { data } = await api.delete(`/admin/recipe-delete/${id}`);
+  const { data } = await api.delete(`/admin/recipes/${id}`);
   return data;
 };
 
 export const getRecipeByIdApi = async (id: string) => {
-    const { data } = await api.get(`/admin/get-recipe-detail/${id}`);
+    const { data } = await api.get(`/admin/recipes/${id}`);
     return data;
 };

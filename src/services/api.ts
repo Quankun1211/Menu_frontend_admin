@@ -4,7 +4,7 @@ import api from "./axios";
 import { getRefreshToken } from "../utils/token";
 
 export const onGetMeApi = async (): Promise<BackendResponse<UserRecord>> => {
-    const data = await api.get("/user/me")
+    const data = await api.get("/users/me")
     return data.data
 }
 

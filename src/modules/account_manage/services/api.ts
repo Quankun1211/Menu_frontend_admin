@@ -8,7 +8,7 @@ export const onRegisterUserApi = async(
     payload: UserRegisterRequest
 ) : Promise<BackendResponse<UserResponse>> => {
     const {email, name, password, phone, username, role} = payload
-    const data = await api.post("/admin/create-user", {
+    const data = await api.post("/admin/users", {
         name, 
         username,
         email,
@@ -22,7 +22,7 @@ export const getAdminsAndShippersApi = async (
     params: { page: number; limit: number; role?: string; search?: string }
 ): Promise<PaginationResponse<UserResponse>> => {
     const { page, limit, role, search } = params;
-    const response = await api.get("/admin/users-get", {
+    const response = await api.get("/admin/users", {
         params: {
             page,
             limit,
@@ -34,11 +34,11 @@ export const getAdminsAndShippersApi = async (
 };
 
 export const deleteUserApi = async (id: string) => {
-    const response = await api.delete(`/admin/users-delete/${id}`);
+    const response = await api.delete(`/admin/users/${id}`);
     return response.data;
 };
 
 export const updateUserApi = async (id: string, payload: UserUpdateRequest) => {
-    const { data } = await api.patch(`/admin/users-update/${id}`, payload);
+    const { data } = await api.patch(`/admin/users/${id}`, payload);
     return data;
 };

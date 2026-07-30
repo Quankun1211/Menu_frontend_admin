@@ -8,7 +8,7 @@ export const getAllMenuApi = async (
 ): Promise<PaginationResponse<MenuResponse>> => {
     
     const { page, limit, category } = params;
-    const response = await api.get("/admin/get-all-menus", {
+    const response = await api.get("/admin/menus", {
         params: {
             page,
             limit,
@@ -19,7 +19,7 @@ export const getAllMenuApi = async (
 };
 
 export const createMenuApi = async (formData: FormData): Promise<BackendResponse<MenuResponse>> => {
-    const response = await api.post("/admin/create-menu", formData, {
+    const response = await api.post("/admin/menus", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -28,18 +28,18 @@ export const createMenuApi = async (formData: FormData): Promise<BackendResponse
 };
 
 export const updateMenuApi = async (id: string, formData: FormData): Promise<BackendResponse<MenuResponse>> => {
-    const response = await api.put(`/admin/menu-update/${id}`, formData, {
+    const response = await api.put(`/admin/menus/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
     })
     return response.data;
 };
 
 export const deleteMenuApi = async (id: string): Promise<BackendResponse<MenuResponse>> => {
-    const response = await api.delete(`/admin/menu-delete/${id}`)
+    const response = await api.delete(`/admin/menus/${id}`)
     return response.data;
 };
 
 export const getMenuByIdApi = async (id: string) => {
-    const { data } = await api.get(`/admin/get-menu-detail/${id}`);
+    const { data } = await api.get(`/admin/menus/${id}`);
     return data;
 };

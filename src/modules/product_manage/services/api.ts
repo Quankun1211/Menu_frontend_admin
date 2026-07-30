@@ -8,7 +8,7 @@ export const getAllProductAdminApi = async (
     params: { page: number; limit: number; status?: string, search ?: string }
 ): Promise<PaginationResponse<ProductResponse>> => {
     const { page, limit, status, search } = params;
-    const response = await api.get("/admin/get-all-products", {
+    const response = await api.get("/admin/products", {
         params: {
             page,
             limit,
@@ -23,7 +23,7 @@ export const getAllSpecialAdminApi = async (
     params: { page: number; limit: number; status?: string }
 ): Promise<PaginationResponse<ProductResponse>> => {
     const { page, limit, status } = params;
-    const response = await api.get("/admin/get-all-specials", {
+    const response = await api.get("/admin/specials", {
         params: {
             page,
             limit,
@@ -34,14 +34,14 @@ export const getAllSpecialAdminApi = async (
 };
 
 export const getAllAvailableSalesApi = async() : Promise<BackendResponse<SaleResponse[]>> => {
-    const data = await api.get("/admin/get-all-sales")
+    const data = await api.get("/admin/sales")
     return data.data
 }
 
 export const createProductAdminApi = async (
     formData: FormData
 ): Promise<BackendResponse<ProductAddRequest>> => {
-    const response = await api.post("/admin/create-product", formData, {
+    const response = await api.post("/admin/products", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -50,7 +50,7 @@ export const createProductAdminApi = async (
 };
 
 export const updateProductAdminApi = async (id: string, formData: FormData) => {
-  const response = await api.put(`/admin/product-update/${id}`, formData, {
+  const response = await api.put(`/admin/products/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -59,28 +59,28 @@ export const updateProductAdminApi = async (id: string, formData: FormData) => {
 };
 
 export const getProductDetailApi = async (id: string) => {
-    const response = await api.get(`/admin/get-product-detail/${id}`);
+    const response = await api.get(`/admin/products/${id}`);
     return response.data;
 };
 
 export const getSpecialDetailApi = async (id: string) => {
-  const response = await api.get(`/admin/get-special-detail/${id}`);
+  const response = await api.get(`/admin/specials/${id}`);
   return response.data;
 };
 
 export const updateSpecialAdminApi = async (id: string, formData: FormData) => {
-  const response = await api.put(`/admin/special-update/${id}`, formData, {
+  const response = await api.put(`/admin/specials/${id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
 };
 
 export const deleteSpecialApi = async (id: string) => {
-  const response = await api.delete(`/admin/special-delete/${id}`);
+  const response = await api.delete(`/admin/specials/${id}`);
   return response.data;
 };
 
 export const deleteProductApi = async (id: string) => {
-    const response = await api.delete(`/admin/product-delete/${id}`);
+    const response = await api.delete(`/admin/products/${id}`);
     return response.data;
 };

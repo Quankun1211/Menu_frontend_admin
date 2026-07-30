@@ -9,7 +9,7 @@ export const getAllOrderAdminApi = async (
     params: { page: number; limit: number; status?: string }
 ): Promise<PaginationResponse<OrderResponse>> => {
     const { page, limit, status } = params;
-    const response = await api.get("/admin/get-all-orders", {
+    const response = await api.get("/admin/orders", {
         params: {
             page,
             limit,
@@ -23,7 +23,7 @@ export const onAssignOrderApi = async(
     payload: AssignOrderRequest
 ) : Promise<BackendResponse<UserResponse>> => {
     const { orderId, shipperId } = payload
-    const data = await api.post("/admin/assign-order", {
+    const data = await api.post("/admin/order-assignments", {
         orderId,
         shipperId
     })
@@ -31,6 +31,6 @@ export const onAssignOrderApi = async(
 }
 
 export const onProcessCancelApi = async ( payload: CancelProcessRequest) => {
-    const { data } = await api.patch(`/admin/process-cancel`, payload);
+    const { data } = await api.patch(`/admin/orders/cancellation-requests`, payload);
     return data;
 };

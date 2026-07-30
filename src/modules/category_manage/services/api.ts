@@ -8,7 +8,7 @@ export const getAllCategoryAdminApi = async (
     params: { page: number; limit: number; type?: string }
 ): Promise<PaginationResponse<CategoryResponse>> => {
     const { page, limit, type } = params;
-    const response = await api.get("/admin/get-all-category", {
+    const response = await api.get("/admin/categories", {
         params: {
             page,
             limit,
@@ -22,7 +22,7 @@ export const getAllCategoryAdminApi = async (
 export const createCategoryAdminApi = async (
     formData: FormData
 ): Promise<BackendResponse<CreateCategoryResponse>> => {
-    const response = await api.post("/admin/create-category", formData, {
+    const response = await api.post("/admin/categories", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -31,7 +31,7 @@ export const createCategoryAdminApi = async (
 };
 
 export const updateCategoryApi = async (id: string, formData: FormData) => {
-    const { data } = await api.put(`/admin/category-update/${id}`, formData, {
+    const { data } = await api.put(`/admin/categories/${id}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -40,7 +40,7 @@ export const updateCategoryApi = async (id: string, formData: FormData) => {
 };
 
 export const deleteCategoryApi = async ({ id, type }: { id: string; type: string }) => {
-    const response = await api.delete(`/admin/category-delete/${id}`, {
+    const response = await api.delete(`/admin/categories/${id}`, {
         params: { type: type } 
     });
     return response.data;
