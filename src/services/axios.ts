@@ -27,7 +27,7 @@ const loadCsrfToken = async (forceRefresh = false) => {
   if (csrfToken) return csrfToken;
   if (!csrfRequest) {
     csrfRequest = axios
-      .get(`${ApiUrls.apiBaseUrl}/auth/csrf`, { withCredentials: true })
+      .get(`${ApiUrls.apiBaseUrl}/auth/csrf-tokens`, { withCredentials: true })
       .then((response) => response.data?.data?.csrfToken as string | undefined)
       .finally(() => {
         csrfRequest = undefined;
@@ -43,13 +43,13 @@ api.interceptors.request.use(async (config) => {
   const method = (config.method || "get").toLowerCase();
   const isSafe = ["get", "head", "options"].includes(method);
   const isPublicAuthMutation = [
-    "/auth/login",
-    "/auth/register",
-    "/auth/verify-otp",
-    "/auth/resend-otp",
-    "/auth/forgot-password",
-    "/auth/reset-password",
-    "/auth/refresh",
+    "/auth/sessions",
+    "/auth/registrations",
+    "/auth/email-verifications",
+    "/auth/email-verification-deliveries",
+    "/auth/password-reset-requests",
+    "/auth/password-resets",
+    "/auth/session-refreshes",
   ].some((path) => config.url?.includes(path));
 
   if (!isSafe && !isPublicAuthMutation) {
@@ -79,7 +79,7 @@ api.interceptors.response.use(
     }
 
     const requestUrl = originalRequest?.url || "";
-    const isAuthRoute = ["auth/login", "auth/logout", "auth/register", "auth/refresh"]
+    const isAuthRoute = ["auth/sessions", "auth/registrations", "auth/session-refreshes"]
       .some((path) => requestUrl.includes(path));
 
     if (error.response?.status === 401 && !isAuthRoute && !originalRequest?._retry) {
@@ -87,7 +87,7 @@ api.interceptors.response.use(
       try {
         refreshRequest ||= axios
           .post(
-            `${ApiUrls.apiBaseUrl}/auth/refresh`,
+            `${ApiUrls.apiBaseUrl}/auth/session-refreshes`,
             { token: getRefreshToken(), clientType: "spa" },
             { withCredentials: true },
           )

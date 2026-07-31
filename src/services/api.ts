@@ -9,6 +9,6 @@ export const onGetMeApi = async (): Promise<BackendResponse<UserRecord>> => {
 }
 
 export const onLogoutApi = async (): Promise<BackendResponse<{message: string}>> => {
-    const data = await api.post("/auth/logout", { token: getRefreshToken() })
+    const data = await api.delete("/auth/sessions", { data: { token: getRefreshToken() } })
     return data.data
 }
