@@ -38,14 +38,6 @@ const useLogin = () => {
             } else {
                 message.error("Phản hồi đăng nhập không hợp lệ")
             }
-        },
-        onError: (error: unknown) => {
-            const responseError = error as { error?: string; message?: string };
-            message.error(
-                responseError?.error ||
-                responseError?.message ||
-                "Không thể đăng nhập. Vui lòng thử lại."
-            );
         }
     });
 

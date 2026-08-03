@@ -5,4 +5,8 @@ export type UserResponse = {
     name: string,
     email: string,
     phone: string
+    isOnline?: boolean
+    distanceKm?: number | null
+    activeOrderCount?: number
+    maxActiveOrders?: number
 }

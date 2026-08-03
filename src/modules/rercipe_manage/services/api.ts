@@ -14,7 +14,12 @@ export const getAllRecipesApi = async (params: any): Promise<PaginationResponse<
 };
 
 export const getAllIngredientsApi = async (params: any): Promise<PaginationResponse<IngredientResponse>> => {
-    const response = await api.get("/admin/ingredients", { params });
+    const cleanParams = Object.fromEntries(
+      Object.entries(params || {}).filter(([, value]) =>
+        value !== "" && value !== undefined && value !== null
+      )
+    );
+    const response = await api.get("/admin/ingredients", { params: cleanParams });
     return response.data;
 };
 

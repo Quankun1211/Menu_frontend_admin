@@ -1,132 +1,172 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
+import { Modal } from "antd";
+import {
+  BadgePercent,
+  BookOpen,
+  ChevronDown,
+  ClipboardList,
+  FolderTree,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Salad,
+  Settings,
+  ShoppingBasket,
+  Soup,
+  Users,
+  ReceiptText,
+  MessageCircle,
+} from "lucide-react";
 import { useAppStore } from "../../store/app.store";
 import useLogout from "../../hooks/useLogOut";
-import { Modal } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import api from "../../services/axios";
+import { useSocket } from "../../context/SocketContext";
 
-export default function SideBar() {
-    const { userData } = useAppStore();
-    const [modal, contextHolder] = Modal.useModal();
-    const { mutate: onLogOut } = useLogout();
-    const [expandedItem, setExpandedItem] = useState<string | null>(null);
+type SideBarProps = { onNavigate?: () => void };
 
-    const toggleExpand = (name: string) => {
-        setExpandedItem(expandedItem === name ? null : name);
-    };
+export default function SideBar({ onNavigate }: SideBarProps) {
+  const { userData } = useAppStore();
+  const [modal, contextHolder] = Modal.useModal();
+  const { mutate: onLogOut } = useLogout();
+  const [expandedItem, setExpandedItem] = useState<string | null>("Sản phẩm");
+  const [chatUnread, setChatUnread] = useState(0);
+  const socket = useSocket();
 
-    const showLogoutConfirm = () => {
-        modal.confirm({
-            title: 'Xác nhận',
-            content: 'Bạn có chắc chắn muốn đăng xuất không?',
-            okText: 'Đăng xuất',
-            cancelText: 'Hủy',
-            okButtonProps: { danger: true },
-            centered: true,
-            onOk: onLogOut,
-        });
-    };
+  useEffect(() => {
+    const refresh = () => api.get("/support-chats/conversations")
+      .then((response) => setChatUnread(response.data.unreadCount || 0))
+      .catch(() => undefined);
+    refresh();
+    socket?.on("support_conversation_updated", refresh);
+    return () => { socket?.off("support_conversation_updated", refresh); };
+  }, [socket]);
 
-    const menuItems = [
-        { name: "Bảng điều khiển", path: "/" },
-        { name: "Quản lý tài khoản", path: "/users" },
-        { name: "Quản lý đơn hàng", path: "/order" },
-        { name: "Quản lý danh mục", path: "/manage/category" },
-        { 
-            name: "Quản lý sản phẩm", 
-            children: [
-                { name: "Sản phẩm", path: "/manage/list/products" },
-                { name: "Đặc sản", path: "/manage/list/specials" },
-                { name: "Thêm mới", path: "/manage/products/add" }
-            ]
-        },
-        { name: "Quản lý nguyên liệu", path: "/ingredients" },
-        { name: "Quản lý công thức", path: "/recipes" },
-        { name: "Quản lý thực đơn", path: "/menus" },
-        { name: "Quản lý Sale", path: "/sales" },
-        { name: "Cấu hình vận chuyển", path: "/settings/shipping" },
-    ];
+  const showLogoutConfirm = () => {
+    modal.confirm({
+      title: "Đăng xuất khỏi hệ thống?",
+      content: "Phiên làm việc hiện tại sẽ kết thúc.",
+      okText: "Đăng xuất",
+      cancelText: "Ở lại",
+      okButtonProps: { danger: true },
+      centered: true,
+      onOk: onLogOut,
+    });
+  };
 
-    return (
-        <div className="w-64 h-full bg-white border-r border-gray-200 flex flex-col">
-            {contextHolder}
+  const menuItems = [
+    { name: "Tổng quan", path: "/", icon: LayoutDashboard },
+    { name: "Tài khoản", path: "/users", icon: Users },
+    { name: "Đơn hàng", path: "/order", icon: ClipboardList },
+    { name: "Giao dịch", path: "/transactions", icon: ReceiptText },
+    { name: "Tin nhắn", path: "/support-chat", icon: MessageCircle, badge: chatUnread },
+    { name: "Danh mục", path: "/manage/category", icon: FolderTree },
+    {
+      name: "Sản phẩm",
+      icon: Package,
+      children: [
+        { name: "Danh sách sản phẩm", path: "/manage/list/products" },
+        { name: "Đặc sản vùng miền", path: "/manage/list/specials" },
+        { name: "Thêm sản phẩm", path: "/manage/products/add" },
+      ],
+    },
+    { name: "Nguyên liệu", path: "/ingredients", icon: Salad },
+    { name: "Công thức", path: "/recipes", icon: BookOpen },
+    { name: "Thực đơn", path: "/menus", icon: Soup },
+    { name: "Khuyến mãi", path: "/sales", icon: BadgePercent },
+    { name: "Phí vận chuyển", path: "/settings/shipping", icon: Settings },
+  ];
 
-            <div className="p-6">
-                <h1 className="text-xl font-bold text-gray-800">Trang quản lý</h1>
-                <p className="text-xs text-gray-400 uppercase tracking-widest">Super Admin</p>
-            </div>
+  const itemClass = ({ isActive }: { isActive: boolean }) =>
+    `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+      isActive
+        ? "bg-emerald-50 text-emerald-700 shadow-sm"
+        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+    }`;
 
-            <nav className="flex-1 overflow-y-auto px-4 custom-scrollbar">
-                <ul className="flex flex-col gap-2">
-                    {menuItems.map((item) => (
-                        <li key={item.name}>
-                            {item.children ? (
-                                <div>
-                                    <button
-                                        onClick={() => toggleExpand(item.name)}
-                                        className="w-full flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100"
-                                    >
-                                        <span className="text-sm font-medium">{item.name}</span>
-                                        <FontAwesomeIcon 
-                                            icon={faAngleDown} 
-                                            className={`text-xs transition-transform duration-200 ${expandedItem === item.name ? 'rotate-180' : ''}`} 
-                                        />
-                                    </button>
-                                    
-                                    {expandedItem === item.name && (
-                                        <ul className="pl-6 mt-1 flex flex-col gap-1 border-l-2 border-gray-100 ml-4">
-                                            {item.children.map((child) => (
-                                                <li key={child.name}>
-                                                    <NavLink
-                                                        to={child.path}
-                                                        className={({ isActive }) =>
-                                                            `block px-4 py-2 text-sm rounded-lg transition-colors ${
-                                                                isActive ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-500 hover:text-gray-800"
-                                                            }`
-                                                        }
-                                                    >
-                                                        {child.name}
-                                                    </NavLink>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            ) : (
-                                <NavLink
-                                    to={item.path}
-                                    className={({ isActive }) =>
-                                        `block px-4 py-2 rounded-lg transition-colors text-sm ${
-                                            isActive ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-600 hover:bg-gray-100 font-medium"
-                                        }`
-                                    }
-                                >
-                                    {item.name}
-                                </NavLink>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </nav>
-
-            <div className="p-4 border-t border-gray-100">
-                {userData ? (
-                    <div 
-                        className="flex items-center gap-3 cursor-pointer p-2 hover:bg-red-50 rounded-lg group transition-colors" 
-                        onClick={showLogoutConfirm}
-                    >
-                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 group-hover:bg-red-200 group-hover:text-red-600">
-                            {userData?.name?.charAt(0) || "A"}
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 group-hover:text-red-600">Đăng xuất</span>
-                    </div>
-                ) : (
-                    <NavLink to="/account/login" className="text-sm text-gray-600 px-4 py-2 block hover:text-blue-600">
-                        Đăng nhập
-                    </NavLink>
-                )}
-            </div>
+  return (
+    <div className="flex h-full flex-col bg-white">
+      {contextHolder}
+      <div className="flex h-20 items-center gap-3 border-b border-slate-100 px-6">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-200">
+          <ShoppingBasket size={21} />
         </div>
-    );
+        <div>
+          <h1 className="text-base font-bold tracking-tight text-slate-900">Bếp Việt Admin</h1>
+          <p className="text-xs text-slate-400">Quản trị doanh nghiệp</p>
+        </div>
+      </div>
+
+      <nav className="custom-scrollbar flex-1 overflow-y-auto px-4 py-5">
+        <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Điều hướng</p>
+        <ul className="space-y-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            if (item.children) {
+              const expanded = expandedItem === item.name;
+              return (
+                <li key={item.name}>
+                  <button
+                    onClick={() => setExpandedItem(expanded ? null : item.name)}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
+                  >
+                    <Icon size={18} />
+                    <span className="flex-1 text-left">{item.name}</span>
+                    <ChevronDown size={15} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+                  </button>
+                  {expanded && (
+                    <ul className="ml-5 mt-1 space-y-1 border-l border-slate-200 pl-4">
+                      {item.children.map((child) => (
+                        <li key={child.path}>
+                          <NavLink
+                            to={child.path}
+                            onClick={onNavigate}
+                            className={({ isActive }) =>
+                              `block rounded-lg px-3 py-2 text-sm transition-colors ${
+                                isActive ? "bg-emerald-50 font-semibold text-emerald-700" : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                              }`
+                            }
+                          >
+                            {child.name}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            }
+            return (
+              <li key={item.path}>
+                <NavLink to={item.path!} end={item.path === "/"} onClick={onNavigate} className={itemClass}>
+                  <Icon size={18} />
+                  <span>{item.name}</span>
+                  {!!item.badge && <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs text-white">{item.badge}</span>}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="border-t border-slate-100 p-4">
+        <div className="mb-2 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">
+            {userData?.name?.charAt(0)?.toUpperCase() || "A"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-slate-700">{userData?.name || "Quản trị viên"}</p>
+            <p className="truncate text-xs text-slate-400">{userData?.email}</p>
+          </div>
+        </div>
+        <button
+          onClick={showLogoutConfirm}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-rose-50 hover:text-rose-600"
+        >
+          <LogOut size={17} />
+          Đăng xuất
+        </button>
+      </div>
+    </div>
+  );
 }

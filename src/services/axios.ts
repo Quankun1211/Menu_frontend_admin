@@ -2,6 +2,8 @@ import axios from "axios";
 import { ApiUrls } from "../config/url";
 import { clearTokens, getRefreshToken, getToken, setRefreshToken, setToken } from "../utils/token";
 import { useAppStore } from "../store/app.store";
+import { message } from "antd";
+import { getFriendlyError } from "../utils/friendlyError";
 
 const api = axios.create({
   baseURL: ApiUrls.apiBaseUrl,
@@ -13,6 +15,13 @@ api.defaults.headers.post["Content-Type"] = "application/json";
 let csrfToken: string | undefined;
 let csrfRequest: Promise<string | undefined> | undefined;
 let refreshRequest: Promise<any> | undefined;
+let lastErrorToast = { text: "", at: 0 };
+const showErrorToast = (text: string) => {
+  const now = Date.now();
+  if (lastErrorToast.text === text && now - lastErrorToast.at < 3000) return;
+  lastErrorToast = { text, at: now };
+  message.error(text);
+};
 
 const readCookie = (name: string) =>
   document.cookie
@@ -104,13 +113,16 @@ api.interceptors.response.use(
       } catch (refreshError: any) {
         clearTokens();
         useAppStore.getState().setUserData(null);
+        message.info("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.");
         if (window.location.pathname !== "/account/login") {
           window.location.href = "/account/login";
         }
         return Promise.reject(refreshError.response?.data || refreshError);
       }
     }
-    return Promise.reject(error.response?.data || error);
+    const friendlyMessage = getFriendlyError(error);
+    showErrorToast(friendlyMessage);
+    return Promise.reject({ ...(error.response?.data || {}), message: friendlyMessage, statusCode: error.response?.status });
   },
 );
 

@@ -19,13 +19,13 @@ const PageContainer = ({ title, description, actions, children, breadcrumbItems 
   const navigate = useNavigate();
 
   return (
-    <div className="p-6">
-      <div className={`flex justify-between items-center ${breadcrumbItems ? "mb-2" : "mb-6"}`}>
+    <div className="p-4 sm:p-6 xl:p-8">
+      <div className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${breadcrumbItems ? "mb-2" : "mb-6"}`}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
-          <p className="text-gray-500">{description}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
+          <p className="mt-1 text-sm text-slate-500">{description}</p>
         </div>
-        <div className="flex gap-3">{actions}</div>
+        <div className="flex flex-wrap gap-3">{actions}</div>
       </div>
       
       {breadcrumbItems && (
@@ -46,7 +46,7 @@ const PageContainer = ({ title, description, actions, children, breadcrumbItems 
         />
       )}
 
-      <div className={`bg-white p-6 ${breadcrumbItems && "mt-4"} rounded-xl border border-gray-100 shadow-sm`}>
+      <div className={`bg-white p-4 sm:p-6 ${breadcrumbItems && "mt-4"} rounded-2xl border border-slate-200 shadow-sm`}>
         {children}
       </div>
     </div>

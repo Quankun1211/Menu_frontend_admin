@@ -19,15 +19,17 @@ export const onRegisterUserApi = async(
     return data.data
 }
 export const getAdminsAndShippersApi = async (
-    params: { page: number; limit: number; role?: string; search?: string }
+    params: { page: number; limit: number; role?: string; search?: string; availability?: "online" | "all"; orderId?: string }
 ): Promise<PaginationResponse<UserResponse>> => {
-    const { page, limit, role, search } = params;
+    const { page, limit, role, search, availability, orderId } = params;
     const response = await api.get("/admin/users", {
         params: {
             page,
             limit,
             role: role === "all" ? undefined : role,
-            search: search || undefined
+            search: search || undefined,
+            availability,
+            orderId,
         }
     });
     return response.data;

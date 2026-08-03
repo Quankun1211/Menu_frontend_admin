@@ -7,7 +7,10 @@ export type OrderResponse = {
   subTotal: number;
   couponCode: string | null;
   couponDiscount: number;
+  shippingFee: number;
   totalPrice: number;
+  paymentMethod: "cod" | "vnpay";
+  items: OrderItemResponse[];
   itemsForRebuy: OrderProductResponse[],
   status:
     | "pending"
@@ -50,6 +53,19 @@ export type OrderResponse = {
     _id: string,
     name: string
   }
+};
+
+export type OrderItemResponse = {
+  _id: string;
+  productId: string;
+  itemType: "Product" | "Special";
+  productName: string;
+  productImage: string | string[];
+  productUnit: string;
+  originalPrice?: number;
+  salePercent: number;
+  price: number;
+  quantity: number;
 };
 
 export type OrderProductResponse = {

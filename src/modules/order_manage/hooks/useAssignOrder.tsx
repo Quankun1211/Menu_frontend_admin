@@ -13,6 +13,10 @@ const useAssignOrder = () => {
             queryClient.invalidateQueries({ queryKey: ["get-all-orders-admin"] });
             queryClient.invalidateQueries({ queryKey: ["get-all-order-shipper"] });
         },
+        onError: (error: any) => {
+            message.error(error?.message || "Không thể gán đơn cho shipper");
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
     });
 
     return { data, error, isPending, isError, mutate };

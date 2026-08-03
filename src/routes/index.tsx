@@ -14,6 +14,8 @@ import { recipeManageRouter } from "../modules/rercipe_manage/routes";
 import { ingredientManageRouter } from "../modules/rercipe_manage/routes";
 import { menuManageRouter } from "../modules/menu_manage/routes";
 import { configManageRouter } from "../modules/config_manage/routes";
+import { transactionManageRouter } from "../modules/transaction_manage/routes";
+import { supportChatRouter } from "../modules/support_chat/routes";
 const AuthLayoutWithSuspense = () => (
   <Suspense fallback={<Fallback />}>
     <AuthLayout />
@@ -48,7 +50,9 @@ const router = createBrowserRouter([
                     ...recipeManageRouter,
                     ...ingredientManageRouter,
                     ...menuManageRouter,
-                    ...configManageRouter
+                    ...configManageRouter,
+                    ...transactionManageRouter,
+                    ...supportChatRouter,
                 ]
             },
             {

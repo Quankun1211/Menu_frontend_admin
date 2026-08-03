@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, useMemo, useEffect, useRef } from 'react';
+import { message } from 'antd';
 import { io, Socket } from 'socket.io-client';
 import env from "../config/envConfig";
 import { useAppStore } from "../store/app.store";
@@ -9,6 +10,7 @@ const SocketContext = createContext<Socket | null>(null);
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const socketUrl = env.VITE_SOCKET_URL || window.location.origin;
   const userData = useAppStore((state) => state.userData);
+  const connectedOnce = useRef(false);
   
   const socket = useMemo(() => {
     return io(socketUrl, {
@@ -31,6 +33,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     socket.on('connect', () => {
       console.log('✅ Socket connected:', socket.id);
+      if (connectedOnce.current) message.success("Đã khôi phục kết nối thời gian thực.");
+      connectedOnce.current = true;
+    });
+
+    socket.on('disconnect', () => {
+      if (connectedOnce.current) message.warning("Đã mất kết nối thời gian thực. Hệ thống đang tự kết nối lại.");
     });
 
     socket.on('connect_error', (error) => {
@@ -40,6 +48,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socket.off('connect');
       socket.off('connect_error');
+      socket.off('disconnect');
       socket.disconnect();
     };
   }, [socket, userData]);

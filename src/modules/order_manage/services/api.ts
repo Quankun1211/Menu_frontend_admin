@@ -30,6 +30,14 @@ export const onAssignOrderApi = async(
     return data.data
 }
 
+export const onReassignOrderApi = async (payload: AssignOrderRequest & { reason: string }) => {
+    const { data } = await api.put(`/admin/orders/${payload.orderId}/assignment`, {
+        shipperId: payload.shipperId,
+        reason: payload.reason,
+    });
+    return data;
+};
+
 export const onProcessCancelApi = async ( payload: CancelProcessRequest) => {
     const { data } = await api.patch(`/admin/orders/cancellation-requests`, payload);
     return data;
