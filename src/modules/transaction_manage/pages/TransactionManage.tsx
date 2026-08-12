@@ -4,6 +4,7 @@ import { Button, Select, Space, Table, Tag, Tooltip, message } from "antd";
 import dayjs from "dayjs";
 import PageContainer from "../../../components/ui/PageContainer";
 import { getTransactionsApi, retryRefundApi, type AdminTransaction } from "../services/api";
+import { transactionStatusTransfer } from "../types/enums";
 
 const money = new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" });
 
@@ -58,7 +59,7 @@ const TransactionManage = () => {
           { title: "Khách hàng", render: (_, row) => <div><p className="font-medium">{row.userId?.name || "Khách hàng"}</p><p className="text-xs text-slate-400">{row.userId?.email}</p></div> },
           { title: "Phương thức", dataIndex: "paymentMethod", render: (value) => <Tag>{String(value).toUpperCase()}</Tag> },
           { title: "Số tiền", dataIndex: "amount", render: (value) => <strong>{money.format(value)}</strong> },
-          { title: "Trạng thái", dataIndex: "status", render: (value) => <Tag color={value === "completed" ? "green" : value === "failed" ? "red" : value === "refunded" ? "purple" : "orange"}>{value}</Tag> },
+          { title: "Trạng thái", dataIndex: "status", render: (value) => <Tag color={value === "completed" ? "green" : value === "failed" ? "red" : value === "refunded" ? "purple" : "orange"}>{transactionStatusTransfer(value)}</Tag> },
           { title: "Thời gian", dataIndex: "createdAt", render: (value) => dayjs(value).format("DD/MM/YYYY HH:mm") },
           {
             title: "Hoàn tiền",
