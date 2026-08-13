@@ -1,4 +1,3 @@
-/** Nội dung lỗi tập trung của web quản trị. Thêm/sửa câu chữ tại đây. */
 export const ERROR_TEXT: Record<string, string> = {
   ACCOUNT_NOT_FOUND: "Tài khoản không tồn tại. Vui lòng kiểm tra lại tên đăng nhập hoặc email.",
   PASSWORD_INCORRECT: "Mật khẩu không chính xác. Vui lòng nhập lại.",

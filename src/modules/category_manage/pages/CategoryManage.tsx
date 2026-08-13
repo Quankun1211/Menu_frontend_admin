@@ -6,6 +6,7 @@ import useGetAllCategory from '../hooks/useGetAllCategory';
 import useCreateCategory from '../hooks/useCreateCategory';
 import useUpdateCategoryData from '../hooks/useUpdateCategory';
 import useDeleteCategory from '../hooks/useDeleteCategory';
+import useRestoreCategory from '../hooks/useRestoreCategory';
 
 const { Dragger } = Upload;
 
@@ -27,6 +28,7 @@ const CategoryManage = () => {
   const { createCategory, isCreating } = useCreateCategory();
   const { mutate: updateCategory, isUpdating } = useUpdateCategoryData();
   const { deleteCategory, isDeleting } = useDeleteCategory();
+  const { restoreCategory, isRestoring } = useRestoreCategory();
 
   const handleTabChange = (key: string) => {
     setStatus(key);
@@ -89,24 +91,76 @@ const CategoryManage = () => {
       key: 'action',
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record)}>Sửa</Button>
-          
-          <Popconfirm
-            title="Xác nhận xóa"
-            description={
-              <div>
-                <p>Bạn có chắc chắn muốn xóa danh mục <strong>{record.name}</strong>?</p>
-                <p className="text-xs text-red-500">* Hành động này có thể được khôi phục từ thùng rác.</p>
-              </div>
-            }
-            onConfirm={() => deleteCategory({ id: record._id, type: status })}
-            okText="Xóa"
-            cancelText="Hủy"
-            okButtonProps={{ danger: true, loading: isDeleting }}
-            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
           >
-            <Button type="text" danger icon={<DeleteOutlined />}>Xóa</Button>
-          </Popconfirm>
+            Sửa
+          </Button>
+
+          {record.isDeleted ? (
+            <Popconfirm
+              title="Xác nhận kích hoạt"
+              description={
+                <p>
+                  Bạn có chắc chắn muốn kích hoạt lại danh mục{' '}
+                  <strong>{record.name}</strong>?
+                </p>
+              }
+              onConfirm={() =>
+                restoreCategory({
+                  id: record._id,
+                  type: status,
+                })
+              }
+              okText="Kích hoạt"
+              cancelText="Hủy"
+              okButtonProps={{ loading: isRestoring }}
+              icon={<QuestionCircleOutlined />}
+            >
+              <Button type="text">
+                Kích hoạt
+              </Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Xác nhận vô hiệu hóa"
+              description={
+                <div>
+                  <p>
+                    Bạn có chắc chắn muốn vô hiệu hóa danh mục{' '}
+                    <strong>{record.name}</strong>?
+                  </p>
+                  <p className="text-xs text-orange-500">
+                    * Danh mục sẽ được chuyển sang trạng thái đã vô hiệu hóa và có
+                    thể kích hoạt lại.
+                  </p>
+                </div>
+              }
+              onConfirm={() =>
+                deleteCategory({
+                  id: record._id,
+                  type: status,
+                })
+              }
+              okText="Vô hiệu hóa"
+              cancelText="Hủy"
+              okButtonProps={{
+                danger: true,
+                loading: isDeleting,
+              }}
+              icon={<QuestionCircleOutlined style={{ color: 'orange' }} />}
+            >
+              <Button
+                type="text"
+                danger
+                icon={<DeleteOutlined />}
+              >
+                Vô hiệu hóa
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       ),
     },

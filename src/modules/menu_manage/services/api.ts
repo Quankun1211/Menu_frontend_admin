@@ -39,6 +39,11 @@ export const deleteMenuApi = async (id: string): Promise<BackendResponse<MenuRes
     return response.data;
 };
 
+export const activeMenuApi = async (id: string): Promise<BackendResponse<MenuResponse>> => {
+    const response = await api.patch(`/admin/menus/${id}`)
+    return response.data;
+};
+
 export const getMenuByIdApi = async (id: string) => {
     const { data } = await api.get(`/admin/menus/${id}`);
     return data;

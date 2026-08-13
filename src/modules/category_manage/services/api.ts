@@ -45,3 +45,10 @@ export const deleteCategoryApi = async ({ id, type }: { id: string; type: string
     });
     return response.data;
 };
+
+export const restoreCategoryApi = async ({ id, type }: { id: string; type: string }) => {
+    const response = await api.patch(
+        `/admin/categories/${id}?type=${type}`
+    );
+    return response.data;
+};

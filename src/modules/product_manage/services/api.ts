@@ -84,3 +84,13 @@ export const deleteProductApi = async (id: string) => {
     const response = await api.delete(`/admin/products/${id}`);
     return response.data;
 };
+
+export const activeProductApi = async (id: string) => {
+    const response = await api.patch(`/admin/products/${id}`);
+    return response.data;
+};
+
+export const activeSpecialApi = async (id: string) => {
+    const response = await api.patch(`/admin/specials/${id}`);
+    return response.data;
+};

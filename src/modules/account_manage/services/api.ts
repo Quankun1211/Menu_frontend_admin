@@ -40,6 +40,11 @@ export const deleteUserApi = async (id: string) => {
     return response.data;
 };
 
+export const activeUserApi = async (id: string) => {
+    const response = await api.put(`/admin/users/${id}`);
+    return response.data;
+};
+
 export const updateUserApi = async (id: string, payload: UserUpdateRequest) => {
     const { data } = await api.patch(`/admin/users/${id}`, payload);
     return data;

@@ -9,6 +9,7 @@ export type RecipeResponse = {
     weatherTag: string;
     difficulty: string;
     cookTime: number;
+    isDeleted: boolean;
 }
 
 export type IngredientResponse = {

@@ -18,5 +18,6 @@ export type MenuResponse = {
         image: string;
     }],
     cookTime: number;
-    totalPrice: number
+    totalPrice: number;
+    isDeleted: boolean;
 }

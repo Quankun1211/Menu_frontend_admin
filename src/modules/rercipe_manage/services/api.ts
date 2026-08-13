@@ -57,6 +57,11 @@ export const deleteRecipeApi = async (id: string) => {
   return data;
 };
 
+export const activeRecipeApi = async (id: string) => {
+  const { data } = await api.patch(`/admin/recipes/${id}`);
+  return data;
+};
+
 export const getRecipeByIdApi = async (id: string) => {
     const { data } = await api.get(`/admin/recipes/${id}`);
     return data;
