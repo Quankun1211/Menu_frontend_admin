@@ -267,7 +267,7 @@ const OrderManage = () => {
               <div><p className="text-xs text-slate-500">Trạng thái</p><Tag color={selectedOrder.status === 'delivered' ? 'green' : selectedOrder.status === 'cancelled' ? 'red' : 'blue'}>{getStatus(selectedOrder.status)}</Tag></div>
               <div><p className="text-xs text-slate-500">Khách hàng</p><p className="font-semibold">{selectedOrder.userId?.name || selectedOrder.address?.name}</p></div>
               <div><p className="text-xs text-slate-500">Số điện thoại</p><p className="font-semibold">{selectedOrder.address?.phone || 'Chưa có'}</p></div>
-              <div><p className="text-xs text-slate-500">Thanh toán</p><p className="font-semibold uppercase">{selectedOrder.paymentMethod || 'cod'} · {selectedOrder.paymentStatus}</p></div>
+              <div><p className="text-xs text-slate-500">Thanh toán</p><p className="font-semibold uppercase">{selectedOrder.paymentMethod || 'cod'} · {selectedOrder.paymentStatus === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}</p></div>
               <div className="sm:col-span-2 lg:col-span-3"><p className="text-xs text-slate-500">Địa chỉ giao hàng</p><p className="font-semibold">{selectedOrder.address?.address || 'Chưa có'}</p></div>
               <div><p className="text-xs text-slate-500">Shipper</p><p className="font-semibold">{selectedOrder.shipperInfo?.name || 'Chưa phân công'}</p></div>
               <div><p className="text-xs text-slate-500">SĐT shipper</p><p className="font-semibold">{selectedOrder.shipperInfo?.phone || '—'}</p></div>
