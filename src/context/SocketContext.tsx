@@ -33,7 +33,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     socket.on('connect', () => {
       console.log('✅ Socket connected:', socket.id);
-      if (connectedOnce.current) message.success("Đã khôi phục kết nối thời gian thực.");
+      // if (connectedOnce.current) message.success("Đã khôi phục kết nối thời gian thực.");
       connectedOnce.current = true;
     });
 

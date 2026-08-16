@@ -11,6 +11,8 @@ import useReassignOrder from '../hooks/useReassignOrder';
 import { Download, Plus } from 'lucide-react';
 import PageContainer from '../../../components/ui/PageContainer';
 import { formatVND } from '../../../utils/helper';
+import { exportExcel } from '../../../utils/excelFormater';
+import type { OrderResponse } from '../types/api-response';
 
 const { Title } = Typography;
 
@@ -118,6 +120,122 @@ const OrderManage = () => {
   const handleTabChange = (key: string) => {
     setStatus(key);
     setPage(1);
+  };
+
+  const handleExportExcel = async () => {
+    try {
+      const { workbook, fileName } = await exportExcel<OrderResponse>({
+        data: data?.data || [],
+        fileName: `don-hang-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        sheetName: "Đơn hàng",
+        columns: [
+          {
+            header: "Mã đơn hàng",
+            key: "_id",
+            width: 20,
+            value: (item: OrderResponse) => `#VN-${item._id.slice(-5).toUpperCase()}`,
+          },
+          {
+            header: "Khách hàng",
+            key: "customer",
+            width: 25,
+            value: (item: OrderResponse) => item.userId?.name || item.address?.name || "",
+          },
+          {
+            header: "Số điện thoại",
+            key: "phone",
+            width: 18,
+            value: (item: OrderResponse) => item.address?.phone || "",
+          },
+          {
+            header: "Địa chỉ",
+            key: "address",
+            width: 40,
+            value: (item: OrderResponse) => item.address?.address || "",
+          },
+          {
+            header: "Trạng thái",
+            key: "status",
+            width: 25,
+            value: (item: OrderResponse) => getStatus(item.status),
+          },
+          {
+            header: "Phương thức thanh toán",
+            key: "paymentMethod",
+            width: 22,
+            value: (item: OrderResponse) => (item.paymentMethod || "cod").toUpperCase(),
+          },
+          {
+            header: "Trạng thái thanh toán",
+            key: "paymentStatus",
+            width: 22,
+            value: (item: OrderResponse) =>
+              item.paymentStatus === "paid"
+                ? "Đã thanh toán"
+                : "Chưa thanh toán",
+          },
+          {
+            header: "Shipper",
+            key: "shipper",
+            width: 25,
+            value: (item: OrderResponse) => item.shipperInfo?.name || "Chưa phân công",
+          },
+          {
+            header: "Tạm tính",
+            key: "subTotal",
+            width: 18,
+            value: (item: OrderResponse) => item.subTotal || 0,
+          },
+          {
+            header: "Phí vận chuyển",
+            key: "shippingFee",
+            width: 18,
+            value: (item: OrderResponse) => item.shippingFee || 0,
+          },
+          {
+            header: "Giảm giá",
+            key: "couponDiscount",
+            width: 18,
+            value: (item: OrderResponse) => item.couponDiscount || 0,
+          },
+          {
+            header: "Tổng tiền",
+            key: "totalPrice",
+            width: 18,
+            value: (item: OrderResponse) => item.totalPrice || 0,
+          },
+          {
+            header: "Ngày đặt",
+            key: "createdAt",
+            width: 22,
+            value: (item: OrderResponse) =>
+              item.createdAt
+                ? new Date(item.createdAt).toLocaleString("vi-VN")
+                : "",
+          },
+        ],
+      });
+
+      const buffer = await workbook.xlsx.writeBuffer();
+
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = fileName;
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      message.success("Xuất Excel thành công");
+    } catch (error) {
+      console.error(error);
+      message.error("Xuất Excel thất bại");
+    }
   };
 
   const columns = [
@@ -230,7 +348,12 @@ const OrderManage = () => {
           prefix={<SearchOutlined />} 
           className="w-96"
         />
-        <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
+        <Button
+          icon={<DownloadOutlined />}
+          onClick={handleExportExcel}
+        >
+          Xuất Excel
+        </Button>
       </div>
 
       <Tabs 

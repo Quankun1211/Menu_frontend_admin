@@ -17,3 +17,4 @@ export const formatVND = (price: any) => {
 export const calcSale = (price: number, salePercent: number) => {
     return formatVND(price - (price * (salePercent / 100)))
 }
+
