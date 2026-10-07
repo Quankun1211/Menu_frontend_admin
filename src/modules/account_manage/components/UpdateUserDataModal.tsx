@@ -94,6 +94,9 @@ const UpdateUserDataModal = ({
                         rules={[{ required: true, message: "Chọn vai trò" }]}
                     >
                         <Select>
+                            <Select.Option value="user">
+                                Người dùng
+                            </Select.Option>
                             <Select.Option value="admin">
                                 Admin
                             </Select.Option>

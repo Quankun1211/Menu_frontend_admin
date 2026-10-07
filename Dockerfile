@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # SỬA DÒNG NÀY: Thêm --legacy-peer-deps để bỏ qua xung đột phiên bản React 19
-RUN npm install --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 RUN npm run build
@@ -15,5 +15,6 @@ RUN npm run build
 FROM nginx:alpine
 # Copy file build từ giai đoạn trước vào Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

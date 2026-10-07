@@ -116,7 +116,7 @@ const AccountManage = () => {
       dataIndex: "role",
       key: "role",
       render: (role: string) => (
-        <Tag color={role === "admin" ? "blue" : "orange"}>
+        <Tag color={role === "admin" ? "blue" : role === "user" ? "default" : "orange"}>
           {role}
         </Tag>
       ),
@@ -214,6 +214,12 @@ const AccountManage = () => {
           {isSuperAdmin && (
             <Select.Option value="admin">
               Quản trị viên
+            </Select.Option>
+          )}
+
+          {isSuperAdmin && (
+            <Select.Option value="user">
+              Người dùng
             </Select.Option>
           )}
 

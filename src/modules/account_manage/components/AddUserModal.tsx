@@ -103,6 +103,12 @@ const AddUserModal = ({
                 >
                     <Select>
                         {isSuperAdmin && (
+                            <Select.Option value="user">
+                                Người dùng
+                            </Select.Option>
+                        )}
+
+                        {isSuperAdmin && (
                             <Select.Option value="admin">
                                 Admin
                             </Select.Option>
